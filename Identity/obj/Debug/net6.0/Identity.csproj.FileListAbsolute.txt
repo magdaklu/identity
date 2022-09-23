@@ -78,3 +78,8 @@ C:\dev\mw\Identity\Identity\obj\Debug\net6.0\Identity.genruntimeconfig.cache
 C:\dev\mw\Identity\Identity\obj\Debug\net6.0\ref\Identity.dll
 C:\dev\mw\Identity\Identity\obj\Debug\net6.0\Identity.RazorAssemblyInfo.cache
 C:\dev\mw\Identity\Identity\obj\Debug\net6.0\Identity.RazorAssemblyInfo.cs
+C:\dev\mw\Identity\Identity\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
+C:\dev\mw\Identity\Identity\bin\Debug\net6.0\Microsoft.AspNetCore.Components.dll
+C:\dev\mw\Identity\Identity\bin\Debug\net6.0\Microsoft.AspNetCore.Components.Authorization.dll
+C:\dev\mw\Identity\Identity\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
+C:\dev\mw\Identity\Identity\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
