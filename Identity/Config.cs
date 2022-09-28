@@ -47,6 +47,51 @@ namespace Identity
                     ClientId = "interactive",
                     ClientSecrets = { new Secret("ClientSecret1".Sha256())},
                     AllowedGrantTypes = GrantTypes.Code,
+                    RedirectUris = { "https://localhost:7225/signin-oidc" },
+                    FrontChannelLogoutUri = "https://localhost:7225/sidnout-oidc",
+                    PostLogoutRedirectUris = { "https://localhost:7225/signout-callback-oidc" },
+                    AllowOfflineAccess = true,
+                    AllowedScopes = { "openid", "profile", "TutorAPI.read", "TutorAPI.write" },
+                    RequirePkce = true,
+                    RequireConsent = true,
+                    AllowPlainTextPkce = false
+                },
+                new Client
+                {
+                    // unique ID for this client
+                    ClientId = "tutor", 
+                    // human-friendly name displayed in IS
+                    ClientName = "Tutor", 
+                    // URL of client
+                    ClientUri = "http://localhost:3000", 
+                    // how client will interact with our identity server (Implicit is basic flow for web apps)
+                    AllowedGrantTypes = GrantTypes.Implicit, 
+                    // don't require client to send secret to token endpoint
+                    RequireClientSecret = false,
+                    RedirectUris =
+                    {             
+                        // can redirect here after login                     
+                        "http://localhost:3000/signin-oidc",
+                    },
+                    // can redirect here after logout
+                    PostLogoutRedirectUris = { "http://localhost:3000/signout-oidc" }, 
+                    // builds CORS policy for javascript clients
+                    AllowedCorsOrigins = { "http://localhost:3000" }, 
+                    // what resources this client can access
+                    AllowedScopes = { "openid", "profile", "TutorAPI.read", "TutorAPI.write" }, 
+                    // client is allowed to receive tokens via browser
+                    AllowAccessTokensViaBrowser = true
+                }
+            };
+        public static IEnumerable<Client> ClientsNew =>
+            new[]
+            {
+                // code flow + pkce
+                new Client
+                {
+                    ClientId = "tutorinteractive",
+                    ClientSecrets = { new Secret("ClientSecret1".Sha256())},
+                    AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = { "https://localhost:3000/signin-oidc" },
                     FrontChannelLogoutUri = "https://localhost:3000/sidnout-oidc",
                     PostLogoutRedirectUris = { "https://localhost:3000/signout-callback-oidc" },
@@ -81,6 +126,23 @@ namespace Identity
                     AllowedScopes = { "openid", "profile", "TutorAPI.read", "TutorAPI.write" }, 
                     // client is allowed to receive tokens via browser
                     AllowAccessTokensViaBrowser = true
+                }
+            };
+
+        public static IEnumerable<Client> ClientsNew2 =>
+            new[]
+            {
+                // code flow + pkce
+                new Client
+                {
+                    ClientId = "tutor.interactive.client",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RedirectUris = { "https://english-tutor.azurewebsites.net/authentication/callback" },
+                    AllowOfflineAccess = true,
+                    AllowedScopes = { "openid", "profile", "offline_access", "tutorapi", "TutorAPI.read", "TutorAPI.write" },
+                    RequirePkce = true,
+                    RequireConsent = false,
+                    AllowPlainTextPkce = false
                 }
             };
     }
