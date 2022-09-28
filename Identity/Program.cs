@@ -2,6 +2,7 @@ using Identity;
 using Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Azure.Identity;
 
 var seed = args.Contains("/seed");
 
@@ -12,16 +13,24 @@ if (seed)
 
 var builder = WebApplication.CreateBuilder(args);
 
-var defaultConnString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+        new DefaultAzureCredential());
+}
+
+var dbConnString = builder.Configuration["IdentityDbConnectionString"];
 var assembly = typeof(Program).Assembly.GetName().Name;
 
 if (seed)
 {
-    SeedData.EnsureSeedData(defaultConnString);
+    SeedData.EnsureSeedData(dbConnString);
 }
 
+
 builder.Services.AddDbContext<AspNetIdentityDbContext>(options =>
-    options.UseSqlServer(defaultConnString, opt => opt.MigrationsAssembly(assembly)));
+    options.UseSqlServer(dbConnString, opt => opt.MigrationsAssembly(assembly)));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AspNetIdentityDbContext>();
@@ -31,16 +40,14 @@ builder.Services.AddIdentityServer()
     .AddConfigurationStore(options =>
     {
         options.ConfigureDbContext = b =>
-        b.UseSqlServer(defaultConnString, opt => opt.MigrationsAssembly(assembly));
+        b.UseSqlServer(dbConnString, opt => opt.MigrationsAssembly(assembly));
     })
     .AddOperationalStore(options =>
     {
         options.ConfigureDbContext = b =>
-        b.UseSqlServer(defaultConnString, opt => opt.MigrationsAssembly(assembly));
+        b.UseSqlServer(dbConnString, opt => opt.MigrationsAssembly(assembly));
     })
     .AddDeveloperSigningCredential();
-
-// Add services to the container.
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
